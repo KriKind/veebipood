@@ -1,9 +1,6 @@
 package ee.kristiina.veebipood.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,5 +19,24 @@ public class Product {
     private String description;
     private Double price;
     private int quantity;
-    private String category;
+
+    // @ManytoMany
+    // @ManytoOne
+    // @OnetoMany
+    // OnetoOne
+
+    @ManyToOne
+    private Category category;
+
+    // @ManytoMany gluteenivaba, laktoosivaba
+    // private List<Characteristic> characteristics
+
+    // @OneToOne
+    // private Toitained toitained;
+
+    // @OnetoMany
+    // private List<TranslatedNames> translatedNames
+
+
+
 }

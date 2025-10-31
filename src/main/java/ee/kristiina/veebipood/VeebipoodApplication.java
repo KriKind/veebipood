@@ -7,7 +7,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class VeebipoodApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(VeebipoodApplication.class, args);
+		System.out.println("VeebipoodApplication");
+        SpringApplication.run(VeebipoodApplication.class, args);
 	}
 
 }
