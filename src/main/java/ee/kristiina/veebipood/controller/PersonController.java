@@ -40,7 +40,7 @@ public class PersonController {
     //localhost:8080/products
     @PutMapping("persons")
     public Person editPerson(@RequestBody Person person){
-        if(person.getId() != null){
+        if(person.getId() == null){
             throw new RuntimeException("Cannot edit when id missing");
         }
         if(person.getEmail() == null || person.getEmail().isEmpty()){
