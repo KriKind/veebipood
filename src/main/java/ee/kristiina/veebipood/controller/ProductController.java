@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+// saab frontendis ligi
+@CrossOrigin("http://localhost:5173/") // "*" kõik clientid saavad ligi
 
 @RestController
 public class ProductController {
