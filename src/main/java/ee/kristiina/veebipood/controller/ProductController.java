@@ -3,13 +3,14 @@ package ee.kristiina.veebipood.controller;
 import ee.kristiina.veebipood.entity.Product;
 import ee.kristiina.veebipood.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
-// saab frontendis ligi
-@CrossOrigin("http://localhost:5173/") // "*" kõik clientid saavad ligi
+// saab frontendis ligi // "*" --> kõik clientid saavad ligi
+@CrossOrigin("http://localhost:5173/") // ainult see aadress saab ligi
+
 
 @RestController
 public class ProductController {
@@ -17,10 +18,10 @@ public class ProductController {
     @Autowired //Dependency Injection
     private ProductRepository productRepository;
 
-    //localhost:8080/products
+    //localhost:8080/products?page=0&size=2&sort=price,desc
     @GetMapping("products")
-    public List<Product> getProducts(){
-        return productRepository.findAll();
+    public Page<Product> getProducts(Pageable pageable) {
+        return productRepository.findAll(pageable);
     }
 
     //localhost:8080/products

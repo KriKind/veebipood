@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import type { Category } from "../models/Category";
 import type { Product } from "../models/Product";
+import { ToastContainer, toast } from 'react-toastify';
 
 //rfce
 function AddProduct() {
@@ -10,7 +11,7 @@ function AddProduct() {
         "description": "",
         "quantity": 0,
         "category": {
-            "id": 0,
+            "id": 1,
             "name": ""
         }
     })
@@ -19,6 +20,7 @@ function AddProduct() {
 
     useEffect(() => {
     const load = async() => {
+      
       try {
         const res = await fetch("http://localhost:8080/categories")
         const json = await res.json()
@@ -35,19 +37,37 @@ function AddProduct() {
 //   }
 
   const add = async() => {
+    if (product.name === "") {
+        toast.error("Cannot add without name")
+        return
+    }
+    if (product.price <= 0) {
+      toast.error("Price cannot be negative")
+      return
+    }
+    
     try {
-            const res = await fetch("http://localhost:8080/products", {
-                method: "POST",
-                body: JSON.stringify(product),
-                headers: {
-                    "Content-Type": "application/json"
-                }
-            })
-            const json = await res.json()
-            console.log(json)
-        } catch(error) {
-            console.log(error)
+      const res = await fetch("http://localhost:8080/products", {
+        method: "POST",
+        body: JSON.stringify(product),
+        headers: {
+          "Content-Type": "application/json"
         }
+      })
+      const json = await res.json()
+      // console.log(json)
+      if (json.message && json.status &&  json.timestamp) {
+        console.log("ERROR")
+        console.log(json)
+        toast.error(json.message)
+      } else {
+        toast.success("toode lisatud")
+      }
+    } catch(error) {
+      console.log("CATCH")
+      console.log(error)
+      toast.error(String(error))
+    }
   }
 
   return (
@@ -65,12 +85,13 @@ function AddProduct() {
         {/* <input onChange={(e) => setProduct({...product, "category": e.target.value})} type="text" /> <br /> */}
         <select onChange={(e) => setProduct({...product, "category": {"id": Number(e.target.value), "name": ""}})}>
         {
-            categories.map(category =>
-                <option value={category.id}>{category.name}</option>
-            )
+          categories.map(category =>
+              <option key={category.id} value={category.id}>{category.name}</option>
+          )
         }
-        </select>
+        </select> <br />
         <button onClick={add}>ADD</button>
+        <ToastContainer />
     </div>
   )
 }

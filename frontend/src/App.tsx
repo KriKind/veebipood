@@ -9,14 +9,21 @@ import Menu from './components/Menu'
 import NotFound from './pages/NotFound'
 import Login from './pages/Login'
 import Signup from './pages/Signup'
+import { useState } from 'react'
 
 
 function App() {
-  
+  const [dark, setDark] = useState(localStorage.getItem("isDarkTheme") === "true")
 
+  function updateMode(isDark: boolean) {
+    setDark(isDark)
+    localStorage.setItem("isDarkTheme", JSON.stringify(isDark))
+  }
   return (
-    <>
+    <div className={dark === true ? "dark-mode" : "light-mode"}>
       <Menu />
+      <button onClick={() => updateMode(true)}>Dark mode</button>
+      <button onClick={() => updateMode(false)}>Light mode</button>
 
       <Routes>
         <Route path='/' element={<HomePage />} />
@@ -26,7 +33,7 @@ function App() {
         <Route path='/signup' element={<Signup />} />
         <Route path='/*' element={<NotFound />} />
       </Routes>
-    </>
+    </div>
   )
 }
 
