@@ -22,8 +22,8 @@ public class Order {
     private Date created;
     private double total;
 
-    @ManyToMany
-    private List<Product> products;
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<OrderRow> orderRows;
 
     @ManyToOne
     private Person person;

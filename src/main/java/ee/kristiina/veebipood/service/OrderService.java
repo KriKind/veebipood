@@ -1,6 +1,7 @@
 package ee.kristiina.veebipood.service;
 
 import ee.kristiina.veebipood.entity.Order;
+import ee.kristiina.veebipood.entity.OrderRow;
 import ee.kristiina.veebipood.entity.Person;
 import ee.kristiina.veebipood.entity.Product;
 import ee.kristiina.veebipood.repository.OrderRepository;
@@ -19,15 +20,15 @@ public class OrderService {
     @Autowired
     private ProductRepository productRepository;
 
-    public Order saveOrder(List<Product> products, Long personId) {
+    public Order saveOrder(List<OrderRow> orderRows, Long personId) {
         Order order = new Order();
         order.setCreated(new Date());
-        order.setProducts(products);
+        order.setOrderRows(orderRows);
 
         double sum = 0;
-        for (Product product : products){
-            Product dbProduct = productRepository.findById(product.getId()).orElseThrow();
-            sum += dbProduct.getPrice();
+        for (OrderRow orderRow : orderRows){
+            Product dbProduct = productRepository.findById(orderRow.getProduct().getId()).orElseThrow();
+            sum += dbProduct.getPrice() * orderRow.getQuantity();
         }
         order.setTotal(sum);
 

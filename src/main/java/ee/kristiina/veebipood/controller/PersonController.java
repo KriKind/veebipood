@@ -1,9 +1,11 @@
 package ee.kristiina.veebipood.controller;
 
+import ee.kristiina.veebipood.dto.PersonDTO;
 import ee.kristiina.veebipood.entity.Person;
 import ee.kristiina.veebipood.entity.Product;
 import ee.kristiina.veebipood.repository.CategoryRepository;
 import ee.kristiina.veebipood.repository.PersonRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +21,22 @@ public class PersonController {
     @GetMapping("persons")
     public List<Person> getPersons() {
         return personRepository.findAll();
+    }
+
+    @GetMapping("public-persons")
+    public List<PersonDTO> getPublicPersons() {
+//        List<Person> persons = personRepository.findAll();
+//        List<PersonDTO> personDTOs = new ArrayList<>();
+//        for (Person person : persons) {
+//            PersonDTO personDTO = new PersonDTO();
+//            personDTO.setFirstName(person.getFirstName());
+//            personDTO.setLastName(person.getLastName());
+//            personDTOs.add(personDTO);
+//        }
+//        return personDTOs;
+        ModelMapper mapper = new ModelMapper();
+        return List.of(mapper.map(personRepository.findAll(), PersonDTO[].class));
+
     }
 
     //localhost:8080/products
