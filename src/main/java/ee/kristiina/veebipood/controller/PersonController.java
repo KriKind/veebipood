@@ -1,9 +1,8 @@
 package ee.kristiina.veebipood.controller;
 
 import ee.kristiina.veebipood.dto.PersonDTO;
+import ee.kristiina.veebipood.entity.Category;
 import ee.kristiina.veebipood.entity.Person;
-import ee.kristiina.veebipood.entity.Product;
-import ee.kristiina.veebipood.repository.CategoryRepository;
 import ee.kristiina.veebipood.repository.PersonRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +16,9 @@ import java.util.List;
 public class PersonController {
     @Autowired
     private PersonRepository personRepository;
+
+    @Autowired
+    private ModelMapper modelMapper;
 
     @GetMapping("persons")
     public List<Person> getPersons() {
@@ -34,8 +36,9 @@ public class PersonController {
 //            personDTOs.add(personDTO);
 //        }
 //        return personDTOs;
-        ModelMapper mapper = new ModelMapper();
-        return List.of(mapper.map(personRepository.findAll(), PersonDTO[].class));
+
+
+        return List.of(modelMapper.map(personRepository.findAll(), PersonDTO[].class));
 
     }
 
@@ -69,6 +72,12 @@ public class PersonController {
         }
 
         return personRepository.save(person);
+    }
+
+    @DeleteMapping("persons/{id}")
+    public ResponseEntity<List<Person>> deleteCategory(@PathVariable Long id) {
+        personRepository.deleteById(id);
+        return ResponseEntity.status(HttpStatus.OK).body(personRepository.findAll());
     }
 
 }

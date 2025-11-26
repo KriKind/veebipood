@@ -8,13 +8,15 @@ import { CartSumContext } from "../context/CartSumContext"
 // re-rendredamine - useState setteri käima panek, HTNL-s muudetakse olekuid
 
 function Cart() {
-  const [orderRows, setOrderRows] = useState<OrderRow[]>(JSON.parse(localStorage.getItem("cart") || "[]"))
+  const [orderRows, setOrderRows] = 
+  useState<OrderRow[]>(JSON.parse(localStorage.getItem("cart") || "[]"))
   const {setCartSum} = useContext(CartSumContext)
   
   function empty() {
     setOrderRows([]) // uuendab html-i siin lehel
     localStorage.setItem("cart", "[]")
     // localStorage.setItem("cart", JSON.stringify([]))
+    // localStorage.setItem("cart",String([]))
     setCartSum(calculateCartSum())
 
   }
