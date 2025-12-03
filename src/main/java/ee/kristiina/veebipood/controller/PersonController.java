@@ -4,6 +4,7 @@ import ee.kristiina.veebipood.dto.PersonDTO;
 import ee.kristiina.veebipood.entity.Category;
 import ee.kristiina.veebipood.entity.Person;
 import ee.kristiina.veebipood.repository.PersonRepository;
+import ee.kristiina.veebipood.service.JwtService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,6 +20,9 @@ public class PersonController {
 
     @Autowired
     private ModelMapper modelMapper;
+
+    @Autowired
+    private JwtService jwtService;
 
     @GetMapping("persons")
     public List<Person> getPersons() {
@@ -78,6 +82,11 @@ public class PersonController {
     public ResponseEntity<List<Person>> deleteCategory(@PathVariable Long id) {
         personRepository.deleteById(id);
         return ResponseEntity.status(HttpStatus.OK).body(personRepository.findAll());
+    }
+
+    @PostMapping("login")
+    public String login(@RequestBody Person person){
+        return jwtService.generateToken(person.getId());
     }
 
 }

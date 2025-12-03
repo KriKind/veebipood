@@ -4,12 +4,17 @@ import './App.css'
 import { Route, Routes } from 'react-router-dom'
 import HomePage from './pages/HomePage'
 import Cart from './pages/Cart'
-import AddProduct from './pages/AddProduct'
+import AddProduct from './pages/admin/AddProduct'
 import Menu from './components/Menu'
 import NotFound from './pages/NotFound'
-import Login from './pages/Login'
-import Signup from './pages/Signup'
+import Login from './pages/auth/Login'
+import Signup from './pages/auth/Signup'
 import { useState } from 'react'
+import ManageAdmins from './pages/admin/ManageAdmins'
+import ManageCategories from './pages/admin/ManageCategories'
+import ManageProducts from './pages/admin/ManageProducts'
+import MyOrders from './pages/auth/MyOrders'
+import Profile from './pages/auth/Profile'
 
 
 function App() {
@@ -28,9 +33,17 @@ function App() {
       <Routes>
         <Route path='/' element={<HomePage />} />
         <Route path='/ostukorv' element={<Cart />} />
+
         <Route path='/lisa-toode' element={<AddProduct />} />
+        <Route path='/halda-admine' element={<ManageAdmins />} />
+        <Route path='/halda-kategooriaid' element={<ManageCategories />} />
+        <Route path='/halda-tooteid' element={<ManageProducts />} />
+
         <Route path='/login' element={<Login />} />
         <Route path='/signup' element={<Signup />} />
+        <Route path='/orders' element={<MyOrders />} />
+        <Route path='/profile' element={<Profile />} />
+
         <Route path='/*' element={<NotFound />} />
       </Routes>
     </div>

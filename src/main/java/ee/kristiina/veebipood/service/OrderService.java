@@ -4,13 +4,22 @@ import ee.kristiina.veebipood.entity.Order;
 import ee.kristiina.veebipood.entity.OrderRow;
 import ee.kristiina.veebipood.entity.Person;
 import ee.kristiina.veebipood.entity.Product;
+import ee.kristiina.veebipood.model.EveryPayBody;
+import ee.kristiina.veebipood.model.EveryPayResponse;
 import ee.kristiina.veebipood.repository.OrderRepository;
 import ee.kristiina.veebipood.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
+import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class OrderService {
@@ -19,6 +28,9 @@ public class OrderService {
 
     @Autowired
     private ProductRepository productRepository;
+
+    @Autowired
+    private RestTemplate restTemplate;
 
     public Order saveOrder(List<OrderRow> orderRows, Long personId) {
         Order order = new Order();
@@ -49,6 +61,28 @@ public class OrderService {
 //            "customer_url": "https://err.ee", // kuhu tagasi suunatakse, ei saa olla localhost
 //            "api_username": "e36eb40f5ec87fa2" // kasutajanimi, mis peab ühtima Authorization-ga
  //       }
-        return "";
+        String url = "https://igw-demo.every-pay.com/api/v4/payments/oneoff";
+
+        EveryPayBody body = new EveryPayBody();
+        body.setAccount_name("EUR3D1");
+        body.setNonce("bla" + ZonedDateTime.now() + UUID.randomUUID());
+        body.setTimestamp(ZonedDateTime.now().toString());
+        body.setAmount(total);
+        body.setOrder_reference("efgh" + id);
+        body.setCustomer_url("https://err.ee");
+        body.setApi_username("e36eb40f5ec87fa2");
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBasicAuth("e36eb40f5ec87fa2","7b91a3b9e1b74524c2e9fc282f8ac8cd");
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        HttpEntity<EveryPayBody> httpEntity = new HttpEntity<>(body, headers);
+
+        EveryPayResponse response = restTemplate.exchange(url, HttpMethod.POST, httpEntity, EveryPayResponse.class).getBody();
+
+        if (response == null) {
+            throw new RuntimeException("EveryPay response is null");
+        }
+        return response.getPayment_link();
     }
 }

@@ -39,7 +39,7 @@ public class OrderController {
     }
     
     @PostMapping("order/{personId}")
-    public Order createOrder(@RequestBody List<OrderRow> orderRows, @PathVariable("personId") Long personId){
+    public String createOrder(@RequestBody List<OrderRow> orderRows, @PathVariable("personId") Long personId){
         Order order = orderService.saveOrder(orderRows, personId);
         return orderService.makePayment(order.getId(), order.getTotal());
     }
