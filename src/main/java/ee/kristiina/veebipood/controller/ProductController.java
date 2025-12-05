@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 // saab frontendis ligi // "*" --> kõik clientid saavad ligi
-@CrossOrigin("http://localhost:5173/") // ainult see aadress saab ligi
+//@CrossOrigin("http://localhost:5173/") // ainult see aadress saab ligi
 
 
 @RestController

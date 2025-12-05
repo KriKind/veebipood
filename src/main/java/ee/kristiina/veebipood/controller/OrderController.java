@@ -2,25 +2,18 @@ package ee.kristiina.veebipood.controller;
 
 import ee.kristiina.veebipood.entity.Order;
 import ee.kristiina.veebipood.entity.OrderRow;
-import ee.kristiina.veebipood.entity.Person;
-import ee.kristiina.veebipood.entity.Product;
 import ee.kristiina.veebipood.model.ParcelMachine;
-import ee.kristiina.veebipood.model.Supplier2;
 import ee.kristiina.veebipood.repository.OrderRepository;
-import ee.kristiina.veebipood.repository.ProductRepository;
 import ee.kristiina.veebipood.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
-import java.time.Period;
 import java.util.Arrays;
-import java.util.Comparator;
-import java.util.Date;
 import java.util.List;
 
-@CrossOrigin("http://localhost:5173")
+//@CrossOrigin("http://localhost:5173")
 @RestController
 public class OrderController {
     @Autowired

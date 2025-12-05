@@ -4,6 +4,7 @@ import ee.kristiina.veebipood.service.JwtFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.AuthorizeHttpRequestsConfigurer;
@@ -28,8 +29,8 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(auth -> auth
                     .requestMatchers("public-persons").permitAll()
-                    .requestMatchers("products").permitAll()
-                    .requestMatchers("categories").permitAll()
+                    .requestMatchers(HttpMethod.GET, "products").permitAll()
+                    .requestMatchers(HttpMethod.GET, "categories").permitAll()
                     .requestMatchers("login").permitAll()
                     .requestMatchers("signup").permitAll()
                     .requestMatchers("parcelmachines").permitAll()

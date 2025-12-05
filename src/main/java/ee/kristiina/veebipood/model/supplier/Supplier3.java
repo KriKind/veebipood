@@ -1,4 +1,4 @@
-package ee.kristiina.veebipood.model;
+package ee.kristiina.veebipood.model.supplier;
 import lombok.Data;
 import java.util.ArrayList;
 

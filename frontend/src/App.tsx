@@ -9,16 +9,18 @@ import Menu from './components/Menu'
 import NotFound from './pages/NotFound'
 import Login from './pages/auth/Login'
 import Signup from './pages/auth/Signup'
-import { useState } from 'react'
+import { useContext, useState } from 'react'
 import ManageAdmins from './pages/admin/ManageAdmins'
 import ManageCategories from './pages/admin/ManageCategories'
 import ManageProducts from './pages/admin/ManageProducts'
 import MyOrders from './pages/auth/MyOrders'
 import Profile from './pages/auth/Profile'
+import { AuthContext } from './context/AuthContext'
 
 
 function App() {
   const [dark, setDark] = useState(localStorage.getItem("isDarkTheme") === "true")
+  const {loggedIn, isAdmin} = useContext(AuthContext)
 
   function updateMode(isDark: boolean) {
     setDark(isDark)
@@ -34,15 +36,24 @@ function App() {
         <Route path='/' element={<HomePage />} />
         <Route path='/ostukorv' element={<Cart />} />
 
-        <Route path='/lisa-toode' element={<AddProduct />} />
-        <Route path='/halda-admine' element={<ManageAdmins />} />
-        <Route path='/halda-kategooriaid' element={<ManageCategories />} />
-        <Route path='/halda-tooteid' element={<ManageProducts />} />
+        { isAdmin &&
+        <>
+          <Route path='/lisa-toode' element={<AddProduct />} />
+          <Route path='/halda-admine' element={<ManageAdmins />} />
+          <Route path='/halda-kategooriaid' element={<ManageCategories />} />
+          <Route path='/halda-tooteid' element={<ManageProducts />} />
+        </>}
 
-        <Route path='/login' element={<Login />} />
-        <Route path='/signup' element={<Signup />} />
-        <Route path='/orders' element={<MyOrders />} />
-        <Route path='/profile' element={<Profile />} />
+        {loggedIn ? 
+        <>
+          <Route path='/orders' element={<MyOrders />} />
+          <Route path='/profile' element={<Profile />} />
+        </>:
+        <>
+          <Route path='/login' element={<Login />} />
+          <Route path='/signup' element={<Signup />} />
+        </>
+        }      
 
         <Route path='/*' element={<NotFound />} />
       </Routes>

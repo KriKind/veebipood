@@ -12,6 +12,15 @@ const resources = {
         "lisa-toode": "Add product",
         "login": "Login",
         "signup": "Signup"
+      },
+      "profile": {
+        "success": "Successfully updated profile"
+      },
+      "error": {
+        "Email cannot be empty":  "Email cannot be empty",
+        "Email is not valid": "Email is not valid",
+        "Email already taken": "Email already taken",
+        "generic": "Unexpected error. Try again later"
       }
     }
   },
@@ -22,6 +31,15 @@ const resources = {
         "lisa-toode": "Lisa toode ",
         "login": "Logi sisse",
         "signup": "Registreeru"
+      },
+      "profile": {
+        "success": "Edukalt profiil uuendatud"
+      },
+      "error": {
+        "Email cannot be empty":  "Email ei saa olla tühi",
+        "Email is not valid": "Email ei ole õigel kujul",
+        "Email already taken": "Email juba võetud",
+        "generic": "Juhtus ootamatu viga. Proovi hijem uuesti"
       }
     }
   }

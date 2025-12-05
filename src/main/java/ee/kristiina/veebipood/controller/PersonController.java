@@ -3,12 +3,17 @@ package ee.kristiina.veebipood.controller;
 import ee.kristiina.veebipood.dto.PersonDTO;
 import ee.kristiina.veebipood.entity.Category;
 import ee.kristiina.veebipood.entity.Person;
+import ee.kristiina.veebipood.model.AuthToken;
+import ee.kristiina.veebipood.model.LoginCredentials;
 import ee.kristiina.veebipood.repository.PersonRepository;
 import ee.kristiina.veebipood.service.JwtService;
+import ee.kristiina.veebipood.service.PersonService;
+import ee.kristiina.veebipood.util.Validations;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,10 +24,10 @@ public class PersonController {
     private PersonRepository personRepository;
 
     @Autowired
-    private ModelMapper modelMapper;
+    private PersonService personService;
 
     @Autowired
-    private JwtService jwtService;
+    private ModelMapper modelMapper;
 
     @GetMapping("persons")
     public List<Person> getPersons() {
@@ -49,20 +54,11 @@ public class PersonController {
     //localhost:8080/products
     @PostMapping("signup")
     public Person signup(@RequestBody Person person){
-        if(person.getId() != null){
-            throw new RuntimeException("Cannot register when id present");
-        }
-        if(person.getEmail() == null || person.getEmail().isEmpty()){
-            throw new RuntimeException("Email cannot be empty");
-        }
-        if(person.getPassword() ==null || person.getPassword().isEmpty()){
-            throw new RuntimeException("Password cannot be empty");
-        }
-        return personRepository.save(person);
+        return personService.savePerson(person);
     }
 
 
-    //localhost:8080/products
+    //localhost:8080/persons
     @PutMapping("persons")
     public Person editPerson(@RequestBody Person person){
         if(person.getId() == null){
@@ -71,10 +67,16 @@ public class PersonController {
         if(person.getEmail() == null || person.getEmail().isEmpty()){
             throw new RuntimeException("Email cannot be empty");
         }
-        if(person.getPassword() ==null || person.getPassword().isEmpty()){
-            throw new RuntimeException("Password cannot be empty");
+        if(!Validations.validateEmail(person.getEmail())){
+            throw new RuntimeException("Email is not valid");
         }
-
+        Person dbPerson = personRepository.findByEmail(person.getEmail());
+        if(dbPerson != null){
+            throw new RuntimeException("Email already taken");
+        }
+//        if(person.getPassword() == null || person.getPassword().isEmpty()){
+//            throw new RuntimeException("Password cannot be empty");
+//        }
         return personRepository.save(person);
     }
 
@@ -85,8 +87,16 @@ public class PersonController {
     }
 
     @PostMapping("login")
-    public String login(@RequestBody Person person){
-        return jwtService.generateToken(person.getId());
+    public AuthToken login(@RequestBody LoginCredentials loginCredentials){
+        AuthToken authToken = new AuthToken();
+        authToken.setToken(personService.getToken(loginCredentials));
+        return authToken;
+    }
+
+    @GetMapping("person")
+    public Person getPerson() {
+        Long personId = Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
+        return personRepository.findById(personId).orElseThrow();
     }
 
 }

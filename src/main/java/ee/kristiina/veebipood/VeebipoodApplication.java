@@ -27,11 +27,11 @@ public class VeebipoodApplication {
 // 7. 17.11 E 9.00 custom repository päringud localStore
 // 8. 18.11 N 9.00 ostukorvi kogus, ostukorvi kogusumma Navbaris, ModelMapper,
 // 9. 26.11 E 9.00 @Autowired, API päringud Supplier, pakiautomaadid
-//10. 28.11 N 9.00
-//11. 01.12 E 9.00 auth
-//12. 04.12 N 9.00 auth
-//13. 08.12 E 9.00 auth
-//14. 11.12 N 9.00 auth
+//10. 01.12 N 9.00 makse lõpetamine, securityConfig +JWT
+//11. 03.12 E 9.00 auth reacti context
+//12. 05.12 N 9.00 auth token frontendis, veateated tõlkes, profile, parooli hashimine, login, signup
+//13. 08.12 E 9.00 auth. parooli muutmine. ainult sinu tellimus, lisamisel token, muutmisel token
+//14. 11.12 N 9.00 auth. rollid: Admin, Superadmin, staatusi muuta
 //15. 15.12 E 9.00 auth
 //16. 18.12 N 9.00 backend serverisse üles, frontend serverise üles, erinevad keskkonnad
 //17. 22.12 E 9.00 logid, emaili saatmine, cashe,
