@@ -13,7 +13,7 @@ function HomePage() {
 
     const [products, setProducts] = useState<Product[]>([])
     const [page, setPage] = useState(0)
-    const [size, setSize] = useState(2)
+    const [size, setSize] = useState(10)
     const [sort, setSort] = useState("id,asc")
     const {cartSum, setCartSum} = useContext(CartSumContext)
 
@@ -72,11 +72,11 @@ function HomePage() {
       <br /> <br />
 
       <label>Mitu tk nähtaval</label>
-      <select defaultValue={2} onChange={updateSize}>
-        <option>1</option>
-        <option>2</option>
-        <option>3</option>
-        <option>4</option>
+      <select defaultValue={10} onChange={updateSize}>
+        <option>10</option>
+        <option>20</option>
+        <option>30</option>
+        <option>40</option>
       </select>
 
       <div className='products'>

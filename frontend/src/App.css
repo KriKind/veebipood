@@ -43,3 +43,18 @@ button {
   color: black;
   min-height: 100vh;
 }
+
+.orders {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+
+.order {
+  border: 2px solid brown;
+  background-color: yellowgreen;
+  text-align: left;
+}
+
+.span {
+  text-align: right;
+}

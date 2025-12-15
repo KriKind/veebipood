@@ -13,7 +13,7 @@ import { AuthContext } from '../context/AuthContext';
 function Menu() {
   const { t, i18n } = useTranslation();
   const {cartSum} = useContext(CartSumContext)
-  const {loggedIn, logout} = useContext(AuthContext)
+  const {role, loggedIn, logout} = useContext(AuthContext)
 
 
   function updateLanguage(newLang: string) {
@@ -33,11 +33,21 @@ function Menu() {
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
             <Nav.Link as={Link} to="/ostukorv">{t("menu.ostukorv")}</Nav.Link>
-            {loggedIn && <Nav.Link as={Link} to="/lisa-toode">{t("menu.lisa-toode")}</Nav.Link>}
+            {loggedIn && (role === "ADMIN" || role === "SUPERADMIN") &&
+              <>
+                <Nav.Link as={Link} to="/lisa-toode">{t("menu.lisa-toode")}</Nav.Link>
+              </>
+            }   
+            {loggedIn && role === "SUPERADMIN" &&
+              <>
+                <Nav.Link as={Link} to="/halda-admine">{t("menu.manage-admins")}</Nav.Link>
+              </>
+            }   
           </Nav>
           <Nav>
             {loggedIn ?
             <>
+              <Nav.Link as={Link} to="/orders">{t("menu.orders")}</Nav.Link>
               <Nav.Link as={Link} to="/profile">{t("menu.profile")}</Nav.Link>
               <Nav.Link onClick={logoutHandler}>{t("logout")}</Nav.Link>
             </>:

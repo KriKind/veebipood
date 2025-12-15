@@ -3,8 +3,10 @@ package ee.kristiina.veebipood.controller;
 import ee.kristiina.veebipood.dto.PersonDTO;
 import ee.kristiina.veebipood.entity.Category;
 import ee.kristiina.veebipood.entity.Person;
+import ee.kristiina.veebipood.entity.PersonRole;
 import ee.kristiina.veebipood.model.AuthToken;
 import ee.kristiina.veebipood.model.LoginCredentials;
+import ee.kristiina.veebipood.model.PasswordCredentials;
 import ee.kristiina.veebipood.repository.PersonRepository;
 import ee.kristiina.veebipood.service.JwtService;
 import ee.kristiina.veebipood.service.PersonService;
@@ -14,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -31,7 +34,7 @@ public class PersonController {
 
     @GetMapping("persons")
     public List<Person> getPersons() {
-        return personRepository.findAll();
+        return personRepository.findByOrderByIdAsc();
     }
 
     @GetMapping("public-persons")
@@ -45,10 +48,13 @@ public class PersonController {
 //            personDTOs.add(personDTO);
 //        }
 //        return personDTOs;
-
-
         return List.of(modelMapper.map(personRepository.findAll(), PersonDTO[].class));
+    }
 
+    @GetMapping("person")
+    public Person getPerson() {
+        Long personId = Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
+        return personRepository.findById(personId).orElseThrow();
     }
 
     //localhost:8080/products
@@ -57,6 +63,12 @@ public class PersonController {
         return personService.savePerson(person);
     }
 
+    @PostMapping("login")
+    public AuthToken login(@RequestBody LoginCredentials loginCredentials){
+        AuthToken authToken = new AuthToken();
+        authToken.setToken(personService.getToken(loginCredentials));
+        return authToken;
+    }
 
     //localhost:8080/persons
     @PutMapping("persons")
@@ -70,10 +82,13 @@ public class PersonController {
         if(!Validations.validateEmail(person.getEmail())){
             throw new RuntimeException("Email is not valid");
         }
+        Person existingPerson = personRepository.findById(person.getId()).orElseThrow();
         Person dbPerson = personRepository.findByEmail(person.getEmail());
-        if(dbPerson != null){
+
+        if(!existingPerson.getEmail().equals(person.getEmail()) && dbPerson != null){
             throw new RuntimeException("Email already taken");
         }
+        person.setPassword(existingPerson.getPassword());
 //        if(person.getPassword() == null || person.getPassword().isEmpty()){
 //            throw new RuntimeException("Password cannot be empty");
 //        }
@@ -86,17 +101,29 @@ public class PersonController {
         return ResponseEntity.status(HttpStatus.OK).body(personRepository.findAll());
     }
 
-    @PostMapping("login")
-    public AuthToken login(@RequestBody LoginCredentials loginCredentials){
-        AuthToken authToken = new AuthToken();
-        authToken.setToken(personService.getToken(loginCredentials));
-        return authToken;
+    @PatchMapping("update-password")
+    public Person updatePassword(@RequestBody PasswordCredentials passwordCredentials){
+        if(passwordCredentials.getId() == null){
+            throw new RuntimeException("Cannot edit when id missing");
+        }
+        if(passwordCredentials.getOldPassword() == null){
+            throw new RuntimeException("Cannot edit when old password missing");
+        }
+        if(passwordCredentials.getNewPassword() == null){
+            throw new RuntimeException("Cannot edit when new password missing");
+        }
+        return personService.changePassword(passwordCredentials);
     }
 
-    @GetMapping("person")
-    public Person getPerson() {
-        Long personId = Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
-        return personRepository.findById(personId).orElseThrow();
+    @PatchMapping("change-admin")
+    public List<Person> changeAdmin(@RequestParam Long id){
+        Person person = personRepository.findById(id).orElseThrow();
+        if(person.getRole().equals(PersonRole.CUSTOMER)){
+            person.setRole(PersonRole.ADMIN);
+        } else {
+            person.setRole(PersonRole.CUSTOMER);
+        }
+        personRepository.save(person);
+        return personRepository.findByOrderByIdAsc();
     }
-
 }

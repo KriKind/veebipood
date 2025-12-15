@@ -7,6 +7,7 @@ import ee.kristiina.veebipood.repository.OrderRepository;
 import ee.kristiina.veebipood.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
@@ -30,18 +31,17 @@ public class OrderController {
     public List<Order> getOrders(){
         return orderRepository.findAll();
     }
-    
-    @PostMapping("order/{personId}")
-    public String createOrder(@RequestBody List<OrderRow> orderRows, @PathVariable("personId") Long personId){
-        Order order = orderService.saveOrder(orderRows, personId);
-        return orderService.makePayment(order.getId(), order.getTotal());
+
+    @GetMapping("my-orders")
+    public List<Order> getPersonOrders(){
+        Long personId = Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
+        return orderRepository.findByPerson_Id(personId);
     }
+
     // localhost:8080/parcelmachines?country=EE
     // localhost:8080/parcelmachines
     @GetMapping("parcelmachines")
     public List<ParcelMachine> parcelmachines(@RequestParam(required = false) String country){
-
-
         System.out.println(restTemplate);
         String url = "https://www.omniva.ee/locations.json";
         // restTemplate(URL kuhu tehakse päring, Method, body + headers, andmetüüp mis tagastatakse)
@@ -55,9 +55,14 @@ public class OrderController {
             return Arrays.stream(body)
                     .toList();
         }
-
     }
 
 
+    @PostMapping("order")
+    public String createOrder(@RequestBody List<OrderRow> orderRows) {
+        Long personId = Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
+        Order order = orderService.saveOrder(orderRows, personId);
+        return orderService.makePayment(order.getId(), order.getTotal());
+    }
 
 }

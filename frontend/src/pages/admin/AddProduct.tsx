@@ -1,7 +1,9 @@
-import { useEffect, useState } from "react"
 import type { Category } from "../../models/Category";
 import type { Product } from "../../models/Product";
 import { ToastContainer, toast } from 'react-toastify';
+import useFetch from "../../hooks/useFetch";
+import useLoadItems from "../../hooks/useLoadItems";
+import { useState } from "react";
 
 //rfce
 function AddProduct() {
@@ -16,21 +18,9 @@ function AddProduct() {
         }
     })
 
-    const [categories, setCategories] = useState<Category[]>([])
+    const backendQuery = useFetch();
+    const categories: Category[] = useLoadItems("/categories", false);
 
-    useEffect(() => {
-    const load = async() => {
-      
-      try {
-        const res = await fetch("http://localhost:8080/categories")
-        const json = await res.json()
-        setCategories(json)
-      } catch(error) {
-        console.log(error)
-      }
-    }
-    load()
-  }, []);
 
 //   function add() {
 
@@ -46,28 +36,29 @@ function AddProduct() {
       return
     }
     
-    try {
-      const res = await fetch("http://localhost:8080/products", {
-        method: "POST",
-        body: JSON.stringify(product),
-        headers: {
-          "Content-Type": "application/json"
-        }
-      })
-      const json = await res.json()
-      // console.log(json)
-      if (json.message && json.status &&  json.timestamp) {
-        console.log("ERROR")
-        console.log(json)
-        toast.error(json.message)
-      } else {
-        toast.success("toode lisatud")
-      }
-    } catch(error) {
-      console.log("CATCH")
-      console.log(error)
-      toast.error(String(error))
-    }
+    backendQuery("/products", "POST", product)
+    // try {
+    //   const res = await fetch("http://localhost:8080/products", {
+    //     method: "POST",
+    //     body: JSON.stringify(product),
+    //     headers: {
+    //       "Content-Type": "application/json"
+    //     }
+    //   })
+    //   const json = await res.json()
+    //   // console.log(json)
+    //   if (json.message && json.status &&  json.timestamp) {
+    //     console.log("ERROR")
+    //     console.log(json)
+    //     toast.error(json.message)
+    //   } else {
+    //     toast.success("toode lisatud")
+    //   }
+    // } catch(error) {
+    //   console.log("CATCH")
+    //   console.log(error)
+    //   toast.error(String(error))
+    // }
   }
 
   return (

@@ -1,6 +1,7 @@
 package ee.kristiina.veebipood.service;
 
 import ee.kristiina.veebipood.entity.Person;
+import ee.kristiina.veebipood.entity.PersonRole;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -9,6 +10,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -16,6 +19,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 
 import java.util.ArrayList;
+import java.util.List;
 
 // @Service --> täpselt sama. Erinevus siis kui tehakse rakenduse ülene analüüs vms
 // milles on võimalik eristada @Service vs @Component klasse
@@ -32,11 +36,24 @@ public class JwtFilter extends OncePerRequestFilter {
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             String token = authorizationHeader.replace("Bearer ", "");
             Person person = jwtService.getPersonByToken(token);
+            List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
+            if (person.getRole().equals(PersonRole.ADMIN)) {
+                // see sulgudes olev roll on täpselt sama mis SecurityConfig failis olev
+                //.hasRole()
+                //.reguestMatchers(HttpMethod.POST,"products").hasRole("MANAGER")
+                //grantedAuthorities.add(new SimpleGrantedAuthority("MANAGER"));
+                grantedAuthorities.add(new SimpleGrantedAuthority("ADMIN"));
+            }
+            if (person.getRole().equals(PersonRole.SUPERADMIN)) {
+                grantedAuthorities.add(new SimpleGrantedAuthority("ADMIN"));
+                grantedAuthorities.add(new SimpleGrantedAuthority("SUPERADMIN"));
+            }
             SecurityContextHolder.getContext().setAuthentication(
                     new UsernamePasswordAuthenticationToken(
                             person.getId(),
                             person.getFirstName() + "," + person.getLastName(),
-                            new ArrayList<>())
+                            grantedAuthorities
+                    )
             );
 
         }

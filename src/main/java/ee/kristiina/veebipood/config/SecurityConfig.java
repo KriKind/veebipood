@@ -28,13 +28,20 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(auth -> auth
-                    .requestMatchers("public-persons").permitAll()
-                    .requestMatchers(HttpMethod.GET, "products").permitAll()
-                    .requestMatchers(HttpMethod.GET, "categories").permitAll()
-                    .requestMatchers("login").permitAll()
-                    .requestMatchers("signup").permitAll()
-                    .requestMatchers("parcelmachines").permitAll()
-                    .anyRequest().authenticated())
+                        .requestMatchers(HttpMethod.GET,"/public-persons").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/products").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/categories").permitAll()
+                        .requestMatchers(HttpMethod.POST,"/login").permitAll()
+                        .requestMatchers(HttpMethod.POST,"/signup").permitAll()
+                        .requestMatchers(HttpMethod.POST,"/products").hasAuthority("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE,"/products").hasAuthority("ADMIN")
+                        .requestMatchers(HttpMethod.PUT,"/products").hasAuthority("ADMIN")
+                        .requestMatchers(HttpMethod.POST,"/categories").hasAuthority("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE,"/categories").hasAuthority("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/persons").hasAuthority("SUPERADMIN")
+                        .requestMatchers(HttpMethod.PATCH, "/change-admin").hasAuthority("SUPERADMIN")
+                        .requestMatchers(HttpMethod.GET, "/parcelmachines").permitAll()
+                        .anyRequest().authenticated())
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class); //jwt --> json web token
         return http.build();
     }

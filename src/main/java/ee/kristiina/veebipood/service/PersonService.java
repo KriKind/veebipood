@@ -2,6 +2,7 @@ package ee.kristiina.veebipood.service;
 
 import ee.kristiina.veebipood.entity.Person;
 import ee.kristiina.veebipood.model.LoginCredentials;
+import ee.kristiina.veebipood.model.PasswordCredentials;
 import ee.kristiina.veebipood.repository.PersonRepository;
 import ee.kristiina.veebipood.util.Validations;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,7 +56,15 @@ public class PersonService {
             throw new RuntimeException("Invalid password");
         }
 
-        return jwtService.generateToken(person.getId());
+        return jwtService.generateToken(person);
     }
 
+    public Person changePassword(PasswordCredentials passwordCredentials) {
+        Person existingPerson = personRepository.findById(passwordCredentials.getId()).orElseThrow();
+        if (!bCryptPasswordEncoder.matches(passwordCredentials.getOldPassword(), existingPerson.getPassword())) {
+            throw new RuntimeException("Old password doesn't match");
+        }
+        existingPerson.setPassword(bCryptPasswordEncoder.encode(passwordCredentials.getNewPassword()));
+        return personRepository.save(existingPerson);
+    }
 }

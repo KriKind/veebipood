@@ -30,10 +30,10 @@ public class VeebipoodApplication {
 //10. 01.12 N 9.00 makse lõpetamine, securityConfig +JWT
 //11. 03.12 E 9.00 auth reacti context
 //12. 05.12 N 9.00 auth token frontendis, veateated tõlkes, profile, parooli hashimine, login, signup
-//13. 08.12 E 9.00 auth. parooli muutmine. ainult sinu tellimus, lisamisel token, muutmisel token
+//13. 08.12 E 9.00 auth. parooli muutmine. hook, ainult sinu tellimus, lisamisel token, muutmisel token
 //14. 11.12 N 9.00 auth. rollid: Admin, Superadmin, staatusi muuta
-//15. 15.12 E 9.00 auth
-//16. 18.12 N 9.00 backend serverisse üles, frontend serverise üles, erinevad keskkonnad
-//17. 22.12 E 9.00 logid, emaili saatmine, cashe,
+//15. 15.12 E 9.00 404 refreshi järgselt, logid, emaili saatmine, cache
+//16. 18.12 N 9.00 veahaldus
+//17. 22.12 E 9.00 backend serverisse üles, frontend serverise üles, erinevad keskkonnad
 // KOJU: lõpuprojekt teha
 //18. 31.12 N 9.00-10.30 ---> lõpuprojekti esitlemine

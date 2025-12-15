@@ -24,6 +24,15 @@ public class ProductController {
         return productRepository.findAll(pageable);
     }
 
+    // ühe võtmine
+    //localhost:8080/products/3
+    @GetMapping("products/{id}")
+    public Product getProduct(@PathVariable Long id){
+        //return productRepository.findById(id).get();
+        //return productRepository.findById(id).orElse(null);
+        return productRepository.findById(id).orElseThrow();
+    }
+
     //localhost:8080/products
     @PostMapping("products")
     public List<Product> addProduct(@RequestBody Product product){
@@ -62,15 +71,7 @@ public class ProductController {
         return productRepository.findAll();
     }
 
-    // ühe võtmine
-    //localhost:8080/products/3
-    @GetMapping("products/{id}")
-    public Product getProduct(@PathVariable Long id){
 
-        //return productRepository.findById(id).get();
-        //return productRepository.findById(id).orElse(null);
-        return productRepository.findById(id).orElseThrow();
-    }
 
     // muutmine terviku
     //localhost:8080/products
