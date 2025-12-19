@@ -6,14 +6,17 @@ import { useNavigate } from "react-router-dom";
 export const AuthContextProvider = ({children}: {children: ReactNode}) => {
     const [loggedIn, setLoggedIn] = useState(false)
     const [person, setPerson] = useState({})
-    const [role, setRole] = useState("CUSTOMER")
+    const [role, setRole] = useState("")
+    const [loading, setLoading] = useState(true)
     const navigate = useNavigate()
+    
 
     useEffect(() => {
-        fetchPerson();
+        fetchPerson(true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
-    function fetchPerson() {
+    function fetchPerson(refreshing: boolean) {
         fetch(`http://localhost:8080/person`, {
             headers: {
                 "Authorization": "Bearer " + sessionStorage.getItem("token")
@@ -21,18 +24,21 @@ export const AuthContextProvider = ({children}: {children: ReactNode}) => {
         })
         .then(res => res.json())
         .then(json => {
+            setLoading(false)
             setPerson(json);
             setRole(json.role);
             setLoggedIn(true);
-            console.log(json)
+            if (!refreshing) {
+                navigate("/profile")
+            }
         })
     }
 
     function login(token:string) {
         sessionStorage.setItem("token", token)
-        fetchPerson()
-        navigate("/profile")
-        
+        fetchPerson(false) // asünkroonne päring ehk võtab aega 
+        // ja senikaua kuni aega võtab, laseb koodil edasi liikuda
+        // navigate("/profile")
     }
 
     function logout() {
@@ -44,7 +50,7 @@ export const AuthContextProvider = ({children}: {children: ReactNode}) => {
     }
     
     return (
-        <AuthContext.Provider value = {{loggedIn, person, role, login, logout}}>
+        <AuthContext.Provider value = {{loggedIn, person, role, loading, login, logout}}>
             {children}
         </AuthContext.Provider>
     )

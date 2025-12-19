@@ -16,6 +16,7 @@ import ManageProducts from './pages/admin/ManageProducts'
 import MyOrders from './pages/auth/MyOrders'
 import Profile from './pages/auth/Profile'
 import { AuthContext } from './context/AuthContext'
+import RequireAuth from './components/RequireAuth'
 
 
 function App() {
@@ -49,16 +50,16 @@ function App() {
           <Route path='/halda-admine' element={<ManageAdmins />} />
         </>}
 
-        {loggedIn ? 
-        <>
+        
+        <Route element={<RequireAuth />}>
           <Route path='/orders' element={<MyOrders />} />
           <Route path='/profile' element={<Profile />} />
-        </>:
+        </Route>
         <>
           <Route path='/login' element={<Login />} />
           <Route path='/signup' element={<Signup />} />
         </>
-        }      
+          
 
         <Route path='/*' element={<NotFound />} />
       </Routes>

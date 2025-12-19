@@ -2,6 +2,7 @@ package ee.kristiina.veebipood.controller;
 
 import ee.kristiina.veebipood.entity.Category;
 import ee.kristiina.veebipood.repository.CategoryRepository;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 //@CrossOrigin(origins = "http://localhost:5173/")
+@Log4j2
 @RestController
 public class CategoryController {
     @Autowired
@@ -17,6 +19,8 @@ public class CategoryController {
 
     @GetMapping("categories")
     public ResponseEntity<List<Category>> getCategories() {
+        System.out.println("Võtan kategooriaid");
+        log.info("võtan {} kategooriaid", categoryRepository.count());
         return ResponseEntity.status(HttpStatus.OK).body(categoryRepository.findAll());
     }
 

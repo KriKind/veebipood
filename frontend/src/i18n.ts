@@ -13,13 +13,16 @@ const resources = {
         "login": "Login",
         "signup": "Signup"
       },
-      "profile": {
-        "success": "Successfully updated profile"
+      "success": {
+        "updated-profile": "Successfully updated profile",
+        "updated-password": "Successfully updated password",
+        "added-product": "Successfully added product"
       },
       "error": {
         "Email cannot be empty":  "Email cannot be empty",
         "Email is not valid": "Email is not valid",
         "Email already taken": "Email already taken",
+        "not-enough-rights": "not-enough-rights",
         "generic": "Unexpected error. Try again later"
       }
     }
@@ -32,13 +35,16 @@ const resources = {
         "login": "Logi sisse",
         "signup": "Registreeru"
       },
-      "profile": {
-        "success": "Edukalt profiil uuendatud"
+      "success": {
+        "updated-profile": "Edukalt profiil uuendatud",
+        "updated-password": "Edukalt parool muudetud",
+        "added-product": "Edukalt toode lisatud"
       },
       "error": {
         "Email cannot be empty":  "Email ei saa olla tühi",
         "Email is not valid": "Email ei ole õigel kujul",
         "Email already taken": "Email juba võetud",
+        "not-enough-rights": "Pole piisavalt õigusi",
         "generic": "Juhtus ootamatu viga. Proovi hijem uuesti"
       }
     }

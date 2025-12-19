@@ -3,6 +3,7 @@ import { useEffect, useState } from "react"
 
 function useLoadItems(endpoint: string, tokenNeeded: boolean) {
     const [items, setItems] = useState([])
+    const [loading, setLoading] = useState(true)
 
     useEffect(() => {
         const load = async() => {
@@ -19,6 +20,7 @@ function useLoadItems(endpoint: string, tokenNeeded: boolean) {
             }
    
             const json = await res.json()
+            setLoading(false)
             setItems(json)
           } catch(error) {
             console.log(error)
@@ -28,7 +30,9 @@ function useLoadItems(endpoint: string, tokenNeeded: boolean) {
       }, [endpoint, tokenNeeded]);
       
   return (
-    items
+    // 1. {items, loading}
+    // 2. [items, loading]
+     [items, loading]
   )
 }
 

@@ -2,12 +2,14 @@ package ee.kristiina.veebipood.controller;
 
 import ee.kristiina.veebipood.entity.Product;
 import ee.kristiina.veebipood.repository.ProductRepository;
+import ee.kristiina.veebipood.service.ProductCacheService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 // saab frontendis ligi // "*" --> kõik clientid saavad ligi
 //@CrossOrigin("http://localhost:5173/") // ainult see aadress saab ligi
 
@@ -18,6 +20,9 @@ public class ProductController {
     @Autowired //Dependency Injection
     private ProductRepository productRepository;
 
+    @Autowired
+    private ProductCacheService productCacheService;
+
     //localhost:8080/products?page=0&size=2&sort=price,desc
     @GetMapping("products")
     public Page<Product> getProducts(Pageable pageable) {
@@ -27,10 +32,11 @@ public class ProductController {
     // ühe võtmine
     //localhost:8080/products/3
     @GetMapping("products/{id}")
-    public Product getProduct(@PathVariable Long id){
+    public Product getProduct(@PathVariable Long id) throws ExecutionException {
         //return productRepository.findById(id).get();
         //return productRepository.findById(id).orElse(null);
-        return productRepository.findById(id).orElseThrow();
+        //return productRepository.findById(id).orElseThrow();
+        return productCacheService.getProduct(id);
     }
 
     //localhost:8080/products
@@ -57,6 +63,7 @@ public class ProductController {
     @DeleteMapping("products")
     public List<Product> deleteProduct(@RequestParam Long id){
         productRepository.deleteById(id);
+        productCacheService.removeProduct(id);
         return productRepository.findAll();
     }
 
@@ -68,6 +75,7 @@ public class ProductController {
     @DeleteMapping("products2/{id}")
     public List<Product> deleteProduct2(@PathVariable Long id){
         productRepository.deleteById(id);
+        productCacheService.removeProduct(id);
         return productRepository.findAll();
     }
 
@@ -87,6 +95,7 @@ public class ProductController {
             throw new RuntimeException("Cannot edit when price is neg");
         }
         productRepository.save(product);
+        productCacheService.putProduct(product);
         return productRepository.findAll();
     }
 

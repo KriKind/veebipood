@@ -12,6 +12,8 @@ function Cart() {
   useState<OrderRow[]>(JSON.parse(localStorage.getItem("cart") || "[]"))
   const {setCartSum} = useContext(CartSumContext)
   
+// võta kõik pakiautomaadid API edpointilt parvel-machines
+
   function empty() {
     setOrderRows([]) // uuendab html-i siin lehel
     localStorage.setItem("cart", "[]")
@@ -65,6 +67,7 @@ function Cart() {
   }
 
   function pay() {
+    // pakiautomaat kaas saata
     fetch("http://localhost:8080/order", {
       method: "POST",
       body: JSON.stringify(orderRows),
@@ -92,11 +95,23 @@ function Cart() {
           <button onClick={() => deleteProduct(index)}>x</button>
         </div>
       )}
-      <br /> <br />
-      <div> Ostukorvi kogusumma: {calculateCartSum().toFixed(2)}</div>
 
-      <button onClick={pay}>Maksa</button>
+      {orderRows.length > 0 &&
+      <>
+        <br /> <br />
+        <div> Ostukorvi kogusumma: {calculateCartSum().toFixed(2)}</div>
+          {/*pakiautomaadid välja kuvada map tsükli abil 
+          kui valitakse siis salvesta see useState muutujasse: selectedParcelMachine (string)
+          */}
+
+          {/*ära näita maksa nuppu kui pole sisse logitud, kui pole sisse logitud, näita
+          siin logi sisse nuppu*/}
+        <button onClick={pay}>Maksa</button>
+      </>
+      }
     </div>
+    
+  
   )
 }
 

@@ -9,10 +9,14 @@ import ee.kristiina.veebipood.model.LoginCredentials;
 import ee.kristiina.veebipood.model.PasswordCredentials;
 import ee.kristiina.veebipood.repository.PersonRepository;
 import ee.kristiina.veebipood.service.JwtService;
+import ee.kristiina.veebipood.service.MailService;
 import ee.kristiina.veebipood.service.PersonService;
 import ee.kristiina.veebipood.util.Validations;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -32,6 +36,9 @@ public class PersonController {
     @Autowired
     private ModelMapper modelMapper;
 
+    @Autowired
+    private MailService mailService;
+
     @GetMapping("persons")
     public List<Person> getPersons() {
         return personRepository.findByOrderByIdAsc();
@@ -39,6 +46,7 @@ public class PersonController {
 
     @GetMapping("public-persons")
     public List<PersonDTO> getPublicPersons() {
+        mailService.sendPlainText("kriskind08@gmail.com", "Pealkiri", "sisu");
 //        List<Person> persons = personRepository.findAll();
 //        List<PersonDTO> personDTOs = new ArrayList<>();
 //        for (Person person : persons) {
@@ -56,6 +64,11 @@ public class PersonController {
         Long personId = Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
         return personRepository.findById(personId).orElseThrow();
     }
+    @Cacheable(value = "personCache", key = "#id")
+    @GetMapping("person/{id}")
+    public Person getPerson(@PathVariable Long id) {
+        return personRepository.findById(id).orElseThrow();
+    }
 
     //localhost:8080/products
     @PostMapping("signup")
@@ -71,6 +84,7 @@ public class PersonController {
     }
 
     //localhost:8080/persons
+    @CachePut(value = "personCache", key = "#person.id")
     @PutMapping("persons")
     public Person editPerson(@RequestBody Person person){
         if(person.getId() == null){

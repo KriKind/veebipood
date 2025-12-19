@@ -6,7 +6,7 @@ function useFetch() {
     
 const { t } = useTranslation() // kui poleks seda rida, oleks UTIL kataloogi sees
 
-    async function makeQuery(endpoint: string, apiMethod: string, payload: any) {
+    async function makeQuery(endpoint: string, apiMethod: string, payload: any, message: string) {
         try {
           const res = await fetch("http://localhost:8080" + endpoint, {
             method: apiMethod,
@@ -16,11 +16,15 @@ const { t } = useTranslation() // kui poleks seda rida, oleks UTIL kataloogi see
               "Content-Type": "application/json"
             }
           })
+          if (res.status === 403) {
+            toast.error(getErrorMessage("not-enough-rights"))
+            return
+          }
           const json = await res.json()
           if(json.message && json.status && json.timestamp) {
             toast.error(getErrorMessage(json.message)) //ilusam on neid läbi tõlke kuvada
           } else {
-            toast.success(t("profile.success"))
+            toast.success(t("success." + message))
           }
           console.log(json)
         } catch(error) {

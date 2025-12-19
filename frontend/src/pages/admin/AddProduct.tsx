@@ -19,7 +19,7 @@ function AddProduct() {
     })
 
     const backendQuery = useFetch();
-    const categories: Category[] = useLoadItems("/categories", false);
+    const [categories, loading]: Category[] = useLoadItems("/categories", false);
 
 
 //   function add() {
@@ -36,7 +36,7 @@ function AddProduct() {
       return
     }
     
-    backendQuery("/products", "POST", product)
+    backendQuery("/products", "POST", product, "added-product")
     // try {
     //   const res = await fetch("http://localhost:8080/products", {
     //     method: "POST",

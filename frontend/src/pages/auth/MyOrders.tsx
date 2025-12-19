@@ -5,8 +5,12 @@ import { type Order } from "../../models/Order";
 function MyOrders() {
 
   //const [orders, setOrders] = useState([]);
-  const orders:Order[] = useLoadItems("/my-orders", true);
+  const [orders, loading]: [Order[], boolean] = useLoadItems("/my-orders", true);
   
+  if (loading) {
+    return <div>Loading....</div>
+  }
+
   if (orders.length === 0) {
     return (<div>Ühtegi tellimust veel pole</div>)
   }
@@ -15,7 +19,7 @@ function MyOrders() {
       {orders.map(order => 
         <div key = {order.id} className="order">
           <div>Order nr: {order.id}</div>
-          <div>{order.created.getDate.toString() }  </div>
+          <div>{order.created.toString() }  </div>
           <div>{order.total} EUR </div>
           <div>{order.orderRows.map(row => 
           <span key={row.id} className="span">
