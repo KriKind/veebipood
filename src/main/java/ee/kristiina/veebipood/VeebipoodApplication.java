@@ -42,7 +42,7 @@ public class VeebipoodApplication {
 //16. 17.12 K 9.00 redis cach, email, CRON, shell-script, automaatselt DB tekitab lisamise/muutmise, logid
 //17. 19.12 R 9.00 backend serverisse üles, frontend serverise üles, erinevad keskkonnad
 // KOJU: lõpuprojekt teha
-//18. 05.01 N 9.00-10.30 ---> lõpuprojekti esitlemine
+//18. 07.01 K 12.00-14.30 ---> lõpuprojekti esitlemine
 
 // veahaldus
 // pakiautomaadid ostukorvis
