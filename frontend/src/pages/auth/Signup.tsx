@@ -2,7 +2,7 @@ import { useState } from "react"
 import { ToastContainer, toast } from 'react-toastify';
 
 function Signup() {
-  const [person, setPerson] = useState({email: "", password: "", firstName: "", lastName: ""})
+  const [person, setPerson] = useState({email: "", password: "", firstName: "", lastName: "", role: "CUSTOMER"})
 
   async function signupHandler() {
       
@@ -16,7 +16,7 @@ function Signup() {
     }
     
     try {
-      const res = await fetch("http://localhost:8080/signup", {
+      const res = await fetch(import.meta.env.VITE_BACKEND_URL + "/signup", {
         method: "POST",
         body: JSON.stringify(person),
         headers: {
@@ -49,6 +49,8 @@ function Signup() {
       <input onChange={(e) => setPerson({...person, "email": e.target.value})} type="text" /> <br />
       <label>Password</label> <br />
       <input onChange={(e) => setPerson({...person, "password": e.target.value})} type="password" /> <br />
+      <label>ROLE (for testing purposes)</label> <br />
+      <input onChange={(e) => setPerson({...person, "role": e.target.value})} type="text" /> <br />
       <button onClick={signupHandler}>Signup</button>
       <ToastContainer />
     </div>

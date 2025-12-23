@@ -19,7 +19,7 @@ function AddProduct() {
     })
 
     const backendQuery = useFetch();
-    const [categories, loading]: Category[] = useLoadItems("/categories", false);
+    const {items: categories}= useLoadItems<Category>("/categories", false);
 
 
 //   function add() {
@@ -38,7 +38,7 @@ function AddProduct() {
     
     backendQuery("/products", "POST", product, "added-product")
     // try {
-    //   const res = await fetch("http://localhost:8080/products", {
+    //   const res = await fetch(import.meta.env.VITE_BACKEND_URL + "/products", {
     //     method: "POST",
     //     body: JSON.stringify(product),
     //     headers: {

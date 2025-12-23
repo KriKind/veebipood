@@ -41,6 +41,7 @@ public class VeebipoodApplication {
 //15. 15.12 E 9.00 järgmine nupp kinni, teade toodet lisades (õnnestub, ei õnnestu), guava cash   //404 refreshi järgselt, logid, emaili saatmine, cache
 //16. 17.12 K 9.00 redis cach, email, CRON, shell-script, automaatselt DB tekitab lisamise/muutmise, logid
 //17. 19.12 R 9.00 backend serverisse üles, frontend serverise üles, erinevad keskkonnad
+//17. 22.12 E 12.30-13.30 backend serverisse üles, frontend serverise üles, erinevad keskkonnad
 // KOJU: lõpuprojekt teha
 //18. 07.01 K 12.00-14.30 ---> lõpuprojekti esitlemine
 

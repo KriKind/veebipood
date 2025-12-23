@@ -8,7 +8,7 @@ const { t } = useTranslation() // kui poleks seda rida, oleks UTIL kataloogi see
 
     async function makeQuery(endpoint: string, apiMethod: string, payload: any, message: string) {
         try {
-          const res = await fetch("http://localhost:8080" + endpoint, {
+          const res = await fetch(import.meta.env.VITE_BACKEND_URL + endpoint, {
             method: apiMethod,
             body: JSON.stringify(payload),
             headers: {

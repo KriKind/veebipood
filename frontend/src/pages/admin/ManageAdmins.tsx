@@ -6,14 +6,14 @@ import type { Person } from "../../models/Person";
 function ManageAdmins() {
 
   const [persons, setPersons] = useState<Person[]>([]);
-  const dbPersons: Person[] = useLoadItems("/persons", true);
+  const {items: dbPersons, loading}= useLoadItems<Person>("/persons", true);
   
   useEffect(() => {
     setPersons(dbPersons)
   }, [dbPersons])
  
   function changeAdmin(person: Person): void {
-    fetch(`http://localhost:8080/change-admin?id=${person.id}`, {
+    fetch(import.meta.env.VITE_BACKEND_URL + `/change-admin?id=${person.id}`, {
       method: "PATCH",
       headers: {
         "Authorization": "Bearer " + sessionStorage.getItem("token")
@@ -23,6 +23,10 @@ function ManageAdmins() {
       .then(json => {
         setPersons(json);
       })
+  }
+
+  if (loading) {
+    return <div>Loading...</div>
   }
 
   return (
